@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Meal {
+  id             String          @id @default(cuid())
+  name           String
+  notes          String?         @db.Text
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  lastSelectedAt DateTime?
+  ingredients    Ingredient[]
+  mealPlans      MealPlanEntry[]
+}
+
+model Ingredient {
+  id        String   @id @default(cuid())
+  name      String
+  quantity  String?
+  unit      String?
+  mealId    String
+  meal      Meal     @relation(fields: [mealId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MealPlanEntry {
+  id        String   @id @default(cuid())
+  date      DateTime @unique
+  servings  Int      @default(1)
+  consumedAt DateTime?
+  mealId    String
+  meal      Meal     @relation(fields: [mealId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AdditionalShoppingItem {
+  id        String   @id @default(cuid())
+  weekStart DateTime
+  ingredient String
+  quantity  String?
+  unit      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([weekStart])
+}
+
+model InventoryItem {
+  id        String   @id @default(cuid())
+  name      String
+  quantity  String?
+  unit      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+}

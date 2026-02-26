@@ -1,0 +1,11 @@
+node_modules
+.pnpm-store
+.turbo
+.env
+.env.*
+!.env.example
+**/dist
+**/build
+**/.DS_Store
+**/.vite
+apps/api/prisma/migrations
